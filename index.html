@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giftastic</title>
+</head>
+<body>
+       <button data-cartoon="amazing-world-of-gumball">Big Head Kitty</button>
+       <button data-cartoon="metalocalypse">Ridiculous Death Metal</button>
+       <button data-cartoon="venturebros">Bronson</button>
+
+  <div id="gifs-appear-here">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+    $("button").on("click", function() {
+    var cartoon = $(this).attr("data-cartoon");
+
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        cartoon + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+    
+        .then(function(response) {
+          var results = response.data;
+          for (var i = 0; i < results.length; i++) {
+            if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
+              var gifDiv = $("<div>");
+              var rating = results[i].rating;
+              var p = $("<p>").text("Rating: " + rating);
+              var personImage = $("<img>");
+
+              
+              personImage.attr("src", results[i].images.fixed_height.url);
+              gifDiv.append(p);
+              gifDiv.append(personImage);
+              $("#gifs-appear-here").prepend(gifDiv);
+            }
+          }
+        });
+    });
+  </script>
+</body>
+</html>
